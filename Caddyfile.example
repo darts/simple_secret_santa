@@ -1,0 +1,6 @@
+# Add this site block to the existing host-installed Caddy configuration.
+# Replace the domain here and in .env with your actual domain.
+santa.example.com {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:3000
+}

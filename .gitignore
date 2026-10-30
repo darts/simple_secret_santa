@@ -1,0 +1,11 @@
+/data/
+/backups/
+/participants.txt
+/state.json
+/.env
+/.env.*
+!/.env.example
+/node_modules/
+/coverage/
+.DS_Store
+*.log

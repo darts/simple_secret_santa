@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c18">
+    <meta name="description" content="A Secret Santa exchange of truly terrible T-shirts. Find your name and discover whose wardrobe you're about to ruin.">
+    <title>The Secret Santa Society</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23101c18'/%3E%3Cpath d='m24 7 5 12 12 5-12 5-5 12-5-12-12-5 12-5Z' fill='%23c9b480'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+    <script src="/background.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#participants">Skip to the names</a>
+    <div class="atmosphere" aria-hidden="true">
+      <canvas id="atmosphere-canvas"></canvas>
+    </div>
+
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="The Secret Santa Society home">
+          <svg class="brand-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <path d="M24 3v42M3 24h42M9.2 9.2l29.6 29.6M9.2 38.8 38.8 9.2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="m24 10 4.1 9.9L38 24l-9.9 4.1L24 38l-4.1-9.9L10 24l9.9-4.1L24 10Z" fill="currentColor"/>
+          </svg>
+          <span class="brand-type">THE SECRET SANTA<span>S O C I E T Y</span></span>
+        </a>
+        <div class="header-right">
+          <span class="header-note">THE LIST<br>REMEMBERS.</span>
+          <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" aria-label="Pause animations" title="Pause animations">
+            <svg class="pause-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 3v10M11 3v10" stroke="currentColor" stroke-width="2"/></svg>
+            <svg class="play-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m5 3 8 5-8 5V3Z" fill="currentColor"/></svg>
+            <span class="motion-label">Pause the magic</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="participants-section" id="participants" tabindex="-1" aria-labelledby="participants-title">
+          <div class="section-heading">
+            <h1 id="participants-title">Find your name.</h1>
+            <p class="opened-count" id="opened-count" aria-label="Loading participant availability"><span class="status-dot" aria-hidden="true"></span><span id="count-text">CHECKING THE LIST</span></p>
+          </div>
+          <p class="section-description">Choose your own name. Find out who gets your terrible T-shirt. One reveal only.</p>
+          <div class="notice" id="notice" role="alert" hidden></div>
+          <div class="loading-state" id="loading-state" role="status">
+            <span class="sr-only">Checking the guest list…</span>
+            <div class="skeleton-card" aria-hidden="true"></div><div class="skeleton-card" aria-hidden="true"></div><div class="skeleton-card" aria-hidden="true"></div><div class="skeleton-card" aria-hidden="true"></div><div class="skeleton-card" aria-hidden="true"></div><div class="skeleton-card" aria-hidden="true"></div>
+          </div>
+          <div class="participant-grid" id="participant-grid"></div>
+          <button class="text-button retry-button" id="retry-button" type="button" hidden>Check the list again <span aria-hidden="true">↻</span></button>
+          <p class="list-footnote"><svg viewBox="0 0 16 18" width="12" height="14" fill="none" aria-hidden="true"><rect x="2" y="8" width="12" height="9" rx="2" stroke="currentColor"/><path d="M5 8V4a3 3 0 0 1 6 0v4" stroke="currentColor"/><path d="M8 11v3" stroke="currentColor"/></svg> Once claimed, a secret belongs to its keeper.</p>
+        </section>
+      </main>
+
+      <footer class="site-footer"><p>Santa has terrible taste.</p><span>STAY MERRY. DRESS BADLY. <span class="footer-star" aria-hidden="true">✦</span></span></footer>
+    </div>
+
+    <dialog class="secret-dialog confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-description">
+      <div class="dialog-inner">
+        <div class="dialog-symbol" aria-hidden="true">✦</div>
+        <p class="eyebrow">A POINT OF NO RETURN</p>
+        <h2 id="confirm-title">Hello, <span id="confirm-name"></span>.</h2>
+        <p class="dialog-description" id="confirm-description">Inside: the unlucky recipient of your terrible T-shirt.<br>You can open this <strong>only once</strong>. Remember the name.</p>
+        <p class="confirmation-note">Make sure this is your name. Opening someone else’s envelope takes away their reveal.</p>
+        <button class="primary-button" id="confirm-button" type="button"><span id="confirm-button-text">Open my envelope</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+        <button class="text-button cancel-button" id="cancel-button" type="button" autofocus>Not my name. Back away slowly.</button>
+        <p class="request-status sr-only" id="request-status" role="status"></p>
+      </div>
+    </dialog>
+
+    <dialog class="secret-dialog reveal-dialog" id="reveal-dialog" aria-labelledby="reveal-title recipient-name" aria-describedby="reveal-description">
+      <div class="dialog-inner">
+        <div class="reveal-sparkles" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span><span>✧</span></div>
+        <div class="opened-envelope" aria-hidden="true"><div class="envelope-letter">✦</div><div class="envelope-body"></div></div>
+        <p class="eyebrow">A CRIME AGAINST COTTON</p>
+        <h2 id="reveal-title">Your terrible T-shirt goes to</h2>
+        <p class="recipient-name" id="recipient-name"></p>
+        <span class="reveal-rule" aria-hidden="true">✦</span>
+        <p class="dialog-description" id="reveal-description">Make it hideous. Make it regrettable.<br>Keep the recipient secret. Let the shirt do the damage.</p>
+        <p class="reveal-warning">Remember the name before you close.<br>This envelope won’t open again.</p>
+        <button class="primary-button" id="close-reveal-button" type="button" autofocus>My lips are sealed <span aria-hidden="true">✓</span></button>
+      </div>
+    </dialog>
+    <noscript><div class="noscript-notice">JavaScript is needed to open your envelope. Enable it and reload to join the exchange.</div></noscript>
+  </body>
+</html>
