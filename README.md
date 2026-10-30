@@ -1,6 +1,6 @@
 # Secret Santa
 
-One-time Secret Santa draws for truly terrible T-shirts. Node.js, no dependencies.
+Entirely vibe-coded, one-time Secret Santa draws for truly terrible T-shirts. Node.js, no dependencies.
 
 ## Run
 
